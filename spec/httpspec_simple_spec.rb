@@ -1,3 +1,5 @@
+require 'spec_helper'
+
 describe "RSpec configuration" do
   describe "#base_url" do
     it "should be callable" do
