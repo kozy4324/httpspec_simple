@@ -3,7 +3,7 @@ require "httpspec_simple/request"
 require "httpspec_simple/custom_matchers"
 
 RSpec.configure do |config|
-  config.add_setting :base_url, :default => 'http://localhost:80'
+  config.add_setting :base_url, :default => 'http://localhost:10080'
 end
 
 define_method "base_url" do |url|
