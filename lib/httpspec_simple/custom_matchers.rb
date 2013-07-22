@@ -12,4 +12,18 @@ module HttpspecSimple
       "#{actual.to_s} would not be http ok"
     end
   end
+
+  RSpec::Matchers.define :respond_within do |expected|
+    match do |actual|
+      actual.response_time < expected
+    end
+
+    failure_message_for_should do |actual|
+      "expected: #{"%7.3f" % expected} seconds\n  result: #{"%7.3f" % actual.response_time} seconds"
+    end
+
+    define_method :seconds do
+      self
+    end
+  end
 end
