@@ -2,6 +2,9 @@ require 'webrick'
 require 'httpspec_simple'
 
 def server_start mount_procs = {}
+    unless mount_procs.has_key?('/')
+      mount_procs['/'] = Proc.new {|req, res| res.status = "200" }
+    end
     captured = []
     server_thread = Thread.new do
       server = WEBrick::HTTPServer.new(

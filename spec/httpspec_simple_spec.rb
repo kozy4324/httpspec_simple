@@ -11,11 +11,7 @@ describe "RSpec configuration" do
   describe "#request" do
     it "should be callable" do
       expect {
-        server_start({
-          "/" => Proc.new {|req, res| res.status = "200" }
-        }) do
-          request '/'
-        end
+        server_start { request '/' }
       }.not_to raise_error
     end
   end
