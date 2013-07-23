@@ -25,5 +25,9 @@ module HttpspecSimple
     define_method :seconds do
       self
     end
+
+    define_method :description do
+      "respond within #{expected} seconds"
+    end
   end
 end
