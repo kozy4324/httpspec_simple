@@ -6,9 +6,9 @@ RSpec.configure do |config|
   config.add_setting :base_url, :default => 'http://localhost:10080'
 end
 
-define_method "base_url" do |url|
+def base_url url
   RSpec.configuration.base_url = url
 end
-define_method "request" do |path|
+def request path
   HttpspecSimple::Request.new("#{RSpec.configuration.base_url}#{path}")
 end
