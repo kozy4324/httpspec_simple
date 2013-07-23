@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'custom matchers' do
   describe '#be_http_ok' do
-    it "should be defined" do
+    it "should check status code" do
       response = nil
       server_start { response = request('/') }
       expect {
