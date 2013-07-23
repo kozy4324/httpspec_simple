@@ -9,6 +9,6 @@ end
 def base_url url
   RSpec.configuration.base_url = url
 end
-def request path
-  HttpspecSimple::Request.new("#{RSpec.configuration.base_url}#{path}")
+def request path, opt={}
+  HttpspecSimple::Request.new("#{RSpec.configuration.base_url}#{path}", opt)
 end
