@@ -50,4 +50,11 @@ describe HttpspecSimple::Request do
       end
     end
   end
+
+  it "should store the response body" do
+    requests, response = server_start( '/' => Proc.new {|req, res| res.body = "body_string" } ) do
+      HttpspecSimple::Request.new('http://localhost:10080/')
+    end
+    response.body.should == "body_string"
+  end
 end

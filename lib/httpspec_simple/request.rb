@@ -3,7 +3,7 @@ require 'uri'
 
 module HttpspecSimple
   class Request
-    attr_reader :response_time, :status
+    attr_reader :response_time, :status, :body
 
     def initialize(url, opt = {})
       @url = URI.parse(url)
@@ -13,8 +13,8 @@ module HttpspecSimple
         http.open_timeout = opt[:timeout]
       end
       retry_count = opt[:retry].to_i
-      @status, @response_time = http.start do |http|
-        res, response_time = process_time do
+      res, @response_time = http.start do |http|
+        process_time do
           open_timeout_error = if Net.const_defined?(:OpenTimeout) then Net::OpenTimeout else Timeout::Error end
           read_timeout_error = if Net.const_defined?(:ReadTimeout) then Net::ReadTimeout else Timeout::Error end
           begin
@@ -25,12 +25,9 @@ module HttpspecSimple
           end
           res
         end
-        unless res.nil?
-          [res.code, response_time]
-        else
-          ['timeout', response_time]
-        end
       end
+      @status = res ? res.code : 'timeout'
+      @body = res ? res.body : nil
     end
 
     def process_time

@@ -30,4 +30,14 @@ module HttpspecSimple
       "respond within #{expected} seconds"
     end
   end
+
+  RSpec::Matchers.define :retrieve_body_including do |expected|
+    match do |actual|
+      actual.body.include?(expected)
+    end
+
+    failure_message_for_should do |actual|
+      "expected the body to include `#{expected}`"
+    end
+  end
 end

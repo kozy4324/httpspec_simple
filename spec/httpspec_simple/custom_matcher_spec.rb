@@ -22,4 +22,13 @@ describe 'custom matchers' do
       }.to raise_error(RSpec::Expectations::ExpectationNotMetError)
     end
   end
+
+  describe '#retrieve_body_including(string)' do
+    it "should check response body" do
+      requests, response = server_start('/' => Proc.new {|req, res| res.body = "<div>body string</div>" }) do
+        request('/')
+      end
+      response.should retrieve_body_including 'dy st'
+    end
+  end
 end
