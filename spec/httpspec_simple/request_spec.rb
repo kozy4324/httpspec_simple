@@ -10,4 +10,12 @@ describe HttpspecSimple::Request do
     requests.should include('http://localhost:10080/')
     response.status.should == "200"
   end
+
+  it "should timeout within a specific time" do
+    response = nil
+    server_start( '/' => Proc.new {|req, res| sleep 2 } ) do
+      response = HttpspecSimple::Request.new('http://localhost:10080/', :timeout => 1)
+    end
+    response.status.should == "timeout"
+  end
 end
