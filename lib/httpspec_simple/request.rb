@@ -1,8 +1,6 @@
 require 'net/http'
 require 'uri'
 
-# TODO: support 1.9
-
 module HttpspecSimple
   class Request
     attr_reader :response_time, :status
@@ -17,10 +15,12 @@ module HttpspecSimple
       retry_count = opt[:retry].to_i
       @status, @response_time = http.start do |http|
         res, response_time = process_time do
+          open_timeout_error = if Net.const_defined?(:OpenTimeout) then Net::OpenTimeout else Timeout::Error end
+          read_timeout_error = if Net.const_defined?(:ReadTimeout) then Net::ReadTimeout else Timeout::Error end
           begin
             res = http.request(Net::HTTP::Get.new(@url.path))
             raise RequestError.new if res.kind_of?(Net::HTTPClientError) or res.kind_of?(Net::HTTPServerError)
-          rescue Net::OpenTimeout, Net::ReadTimeout, RequestError
+          rescue open_timeout_error, read_timeout_error, RequestError
             retry if (retry_count-=1) > 0
           end
           res
