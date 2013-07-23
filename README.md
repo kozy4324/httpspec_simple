@@ -30,6 +30,14 @@ Example passes if response is 200 ok
 
 Example passes if response time is less than n seconds
 
+### retrieve_body_including(string)
+
+Example passes if response body include the passed string
+
+### retrieve_body_matching(regexp)
+
+Example passes if response body match the passed regexp
+
 ## helper method
 
 ### request(url)
