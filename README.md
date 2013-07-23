@@ -20,7 +20,7 @@ describe request('/blog/archives/') do
 end
 ```
 
-## Custom matcher
+## Custom matchers
 
 ### be_http_ok
 
@@ -29,6 +29,16 @@ Example passes if response is 200 ok
 ### resond_within(n).seconds
 
 Example passes if response time is less than n seconds
+
+## helper method
+
+### request(url)
+
+Do request
+
+### base_url(prepend_string)
+
+Prepend to the url string passed to following `request` method
 
 ## Contributing
 
