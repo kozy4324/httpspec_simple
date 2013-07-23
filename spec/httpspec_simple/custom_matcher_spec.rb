@@ -31,4 +31,13 @@ describe 'custom matchers' do
       response.should retrieve_body_including 'dy st'
     end
   end
+
+  describe '#retrieve_body_matching(regexp)' do
+    it "should check response body" do
+      requests, response = server_start('/' => Proc.new {|req, res| res.body = "<div>body string</div>" }) do
+        request('/')
+      end
+      response.should retrieve_body_matching %r|<div>(.+?)</div>|
+    end
+  end
 end

@@ -40,4 +40,26 @@ module HttpspecSimple
       "expected the body to include `#{expected}`"
     end
   end
+
+  RSpec::Matchers.define :retrieve_body_matching do |expected|
+    match do |actual|
+      matchdata = actual.body.match(expected)
+      @captures = matchdata.captures if matchdata
+      !matchdata.nil?
+    end
+
+    failure_message_for_should do |actual|
+      "expected the body to match `#{expected}`"
+    end
+
+    define_method :description do
+      if @captures
+        messages = []
+        @captures.each_with_index {|capture, index| messages.push("#{index} => #{capture}")}
+        "retrieve body matching `#{expected}` {#{messages.join(" ")}}"
+      else
+        "retrieve body matching `#{expected}`"
+      end
+    end
+  end
 end
