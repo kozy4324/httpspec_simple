@@ -8,9 +8,9 @@ Gem::Specification.new do |spec|
   spec.version       = HttpspecSimple::VERSION
   spec.authors       = ["Koji NAKAMURA"]
   spec.email         = ["kozy4324@gmail.com"]
-  spec.description   = %q{RSpec custom matcher}
-  spec.summary       = %q{RSpec custom matcher}
-  spec.homepage      = ""
+  spec.description   = %q{RSpec extension for HTTP request}
+  spec.summary       = %q{RSpec extension for HTTP request}
+  spec.homepage      = "https://github.com/kozy4324/httpspec_simple"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files`.split($/)

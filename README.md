@@ -1,24 +1,34 @@
 # HttpspecSimple
 
-TODO: Write a gem description
-
-## Installation
-
-Add this line to your application's Gemfile:
-
-    gem 'httpspec_simple'
-
-And then execute:
-
-    $ bundle
-
-Or install it yourself as:
-
-    $ gem install httpspec_simple
+RSpec extension for HTTP request
 
 ## Usage
 
-TODO: Write usage instructions here
+```
+require 'httpspec_simple'
+
+base_url 'http://kozy4324.github.io'
+
+describe request('/') do
+  it { should be_http_ok }
+  it { should respond_within(2).seconds }
+end
+
+describe request('/blog/archives/') do
+  it { should be_http_ok }
+  it { should respond_within(2).seconds }
+end
+```
+
+## Custom matcher
+
+### be_http_ok
+
+Example passes if response is 200 ok
+
+### resond_within(n).seconds
+
+Example passes if response time is less than n seconds
 
 ## Contributing
 
