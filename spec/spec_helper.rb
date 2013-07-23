@@ -24,11 +24,11 @@ def server_start mount_procs = {}
     end
     Thread.stop
     begin
-      yield
+      ret_val = yield
     ensure
       server_thread[:server].shutdown
     end
-    captured
+    [captured, ret_val]
 end
 
 RSpec.configure do |config|
