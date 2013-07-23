@@ -27,7 +27,11 @@ module HttpspecSimple
         end
       end
       @status = res ? res.code : 'timeout'
-      @body = res ? res.body : nil
+      unless res.nil?
+        @body = res.body
+        charset = (res['content-type'] || '').split(';').select{|i| i.start_with?('charset=')}.map{|i| i.sub('charset=', '')}[0]
+        @body.force_encoding(charset) unless charset.nil?
+      end
     end
 
     def process_time
