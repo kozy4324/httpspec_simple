@@ -23,8 +23,11 @@ def server_start mount_procs = {}
       server.start
     end
     Thread.stop
-    yield
-    server_thread[:server].shutdown
+    begin
+      yield
+    ensure
+      server_thread[:server].shutdown
+    end
     captured
 end
 
