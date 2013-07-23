@@ -37,7 +37,7 @@ module HttpspecSimple
     end
 
     failure_message_for_should do |actual|
-      "expected the body to include `#{expected}`"
+      "expected the body to include \"#{expected}\""
     end
   end
 
@@ -49,16 +49,16 @@ module HttpspecSimple
     end
 
     failure_message_for_should do |actual|
-      "expected the body to match `#{expected}`"
+      "expected the body to match \"#{expected}\""
     end
 
     define_method :description do
       if @captures
         messages = []
-        @captures.each_with_index {|capture, index| messages.push("#{index} => #{capture}")}
-        "retrieve body matching `#{expected}` {#{messages.join(" ")}}"
+        @captures.each_with_index {|capture, index| messages.push("#{index} => \"#{capture}\"")}
+        "retrieve body matching /#{expected}/ {#{messages.join(" ")}}"
       else
-        "retrieve body matching `#{expected}`"
+        "retrieve body matching /#{expected}/"
       end
     end
   end
