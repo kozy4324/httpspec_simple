@@ -8,11 +8,9 @@ module HttpspecSimple
     def initialize(url, opt = {})
       @url = URI.parse(url)
       http = Net::HTTP.new(@url.host, @url.port)
-      unless opt[:timeout].nil?
-        http.open_timeout = opt[:timeout]
-        http.read_timeout = opt[:timeout]
-      end
-      retry_count = opt[:retry].to_i
+      http.open_timeout = opt[:timeout] || Request.configuration.timeout
+      http.read_timeout = opt[:timeout] || Request.configuration.timeout
+      retry_count = (opt[:retry] || Request.configuration.retry).to_i
       res, @response_time = process_time do
         http.start do |http|
           open_timeout_error = if Net.const_defined?(:OpenTimeout) then Net::OpenTimeout else Timeout::Error end
@@ -42,6 +40,25 @@ module HttpspecSimple
 
     def to_s
       @url.to_s
+    end
+
+    class << Request
+      def configure
+        config = CONFIG_CLASS.new(20, 0)
+        yield config if block_given?
+        configuration.timeout = config.timeout
+        configuration.retry = config.retry
+      end
+
+      CONFIG_CLASS = Struct.new(:timeout, :retry)
+
+      def configuration
+        @config ||= reset_configuration
+      end
+
+      def reset_configuration
+        @config = CONFIG_CLASS.new(20, 0)
+      end
     end
   end
 

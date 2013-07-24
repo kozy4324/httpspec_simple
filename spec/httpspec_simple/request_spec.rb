@@ -57,4 +57,41 @@ describe HttpspecSimple::Request do
     end
     response.body.should == "body_string"
   end
+
+  describe ".configure" do
+    before(:each) { HttpspecSimple::Request.reset_configuration }
+    after(:each)  { HttpspecSimple::Request.reset_configuration }
+    it "should configure the default configuration" do
+      HttpspecSimple::Request.configuration.timeout.should == 20
+      HttpspecSimple::Request.configuration.retry.should == 0
+      HttpspecSimple::Request.configure do |config|
+        config.timeout = 60
+        config.retry = 10
+      end
+      HttpspecSimple::Request.configuration.timeout.should == 60
+      HttpspecSimple::Request.configuration.retry.should == 10
+    end
+
+    it "should timeout within a specific time" do
+      HttpspecSimple::Request.configure do |config|
+        config.timeout = 1
+      end
+      requests, response = server_start( '/' => Proc.new {|req, res| sleep 2 } ) do
+        HttpspecSimple::Request.new('http://localhost:10080/')
+      end
+      response.status.should == "timeout"
+    end
+
+    it "should retry requests while response is not ok" do
+      HttpspecSimple::Request.configure do |config|
+        config.retry = 3
+      end
+      response_codes = %w{503 404 200}
+      requests, response = server_start( '/' => Proc.new {|req, res| res.status = response_codes.shift } ) do
+        HttpspecSimple::Request.new('http://localhost:10080/')
+      end
+      requests.should have(3).items
+      response.status.should == "200"
+    end
+  end
 end
