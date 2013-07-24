@@ -40,9 +40,14 @@ Example passes if response body match the passed regexp
 
 ## helper method
 
-### request(url)
+### request(url, opt={})
 
 Do request
+
+option key | type    | description
+---------- | ------- | -----------
+:retry     | integer | when the response code is {40x,50x} or the timeout occurs, retry request the specific times, default value is 0
+:timeout   | integer | set to Net::HTTP's open_timeout and read_timeout
 
 ### base_url(prepend_string)
 
