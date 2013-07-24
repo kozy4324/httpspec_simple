@@ -62,12 +62,29 @@ Do request
 
 option key | type    | description
 ---------- | ------- | -----------
-:retry     | integer | when the response code is {40x,50x} or the timeout occurs, retry request the specific times, default value is 0
-:timeout   | integer | set to Net::HTTP's open_timeout and read_timeout
+:retry     | Integer | when the response code is {40x,50x} or the timeout occurs, retry request the specific times, default value is 0
+:timeout   | Integer | set to Net::HTTP's open_timeout and read_timeout
+:headers   | Hash    | set to the request header
 
 ### base_url(prepend_string)
 
 Prepend to the url string passed to following `request` method
+
+### HttpspecSimple::Request.configure
+
+configure the global setting as `request()`'s opt argument
+
+```
+HttpspecSimple::Request.configure {|config|
+  config.retry = 3
+  config.timeout = 15
+  config.headers = {"user-agent" => "my-agent"}
+}
+```
+
+### HttpspecSimple::Request.reset_configuration
+
+clear all configuration set by `HttpspecSimple::Request.configure`
 
 ## Contributing
 
