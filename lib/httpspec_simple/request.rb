@@ -9,8 +9,8 @@ module HttpspecSimple
       @url = URI.parse(url)
       http = Net::HTTP.new(@url.host, @url.port)
       unless opt[:timeout].nil?
-        http.read_timeout = opt[:timeout]
         http.open_timeout = opt[:timeout]
+        http.read_timeout = opt[:timeout]
       end
       retry_count = opt[:retry].to_i
       res, @response_time = process_time do
