@@ -13,8 +13,8 @@ module HttpspecSimple
         http.open_timeout = opt[:timeout]
       end
       retry_count = opt[:retry].to_i
-      res, @response_time = http.start do |http|
-        process_time do
+      res, @response_time = process_time do
+        http.start do |http|
           open_timeout_error = if Net.const_defined?(:OpenTimeout) then Net::OpenTimeout else Timeout::Error end
           read_timeout_error = if Net.const_defined?(:ReadTimeout) then Net::ReadTimeout else Timeout::Error end
           begin
