@@ -16,7 +16,11 @@ module HttpspecSimple
           open_timeout_error = if Net.const_defined?(:OpenTimeout) then Net::OpenTimeout else Timeout::Error end
           read_timeout_error = if Net.const_defined?(:ReadTimeout) then Net::ReadTimeout else Timeout::Error end
           begin
-            res = http.request(Net::HTTP::Get.new(@url.path))
+            req = Net::HTTP::Get.new(@url.path)
+            if (headers = opt[:headers] || Request.configuration.headers)
+              headers.each {|k, v| req[k] = v }
+            end
+            res = http.request(req)
             raise RequestError.new if res.kind_of?(Net::HTTPClientError) or res.kind_of?(Net::HTTPServerError)
           rescue open_timeout_error, read_timeout_error, RequestError
             retry if (retry_count-=1) > 0
@@ -48,16 +52,17 @@ module HttpspecSimple
         yield config if block_given?
         configuration.timeout = config.timeout
         configuration.retry = config.retry
+        configuration.headers = config.headers
       end
 
-      CONFIG_CLASS = Struct.new(:timeout, :retry)
+      CONFIG_CLASS = Struct.new(:timeout, :retry, :headers)
 
       def configuration
         @config ||= reset_configuration
       end
 
       def reset_configuration
-        @config = CONFIG_CLASS.new(20, 0)
+        @config = CONFIG_CLASS.new(20, 0, {})
       end
     end
   end

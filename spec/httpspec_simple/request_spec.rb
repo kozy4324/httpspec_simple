@@ -93,5 +93,32 @@ describe HttpspecSimple::Request do
       requests.should have(3).items
       response.status.should == "200"
     end
+
+    it "should send headers" do
+      HttpspecSimple::Request.configure do |config|
+        config.headers = {"user-agent" => "my-agent"}
+      end
+      user_agent_in_req_header = nil
+      server_start( '/' => Proc.new {|req, res|
+        user_agent_in_req_header = req["user-agent"]
+        res.status = "200"
+      } ) do
+        HttpspecSimple::Request.new('http://localhost:10080/')
+      end
+      user_agent_in_req_header.should == "my-agent"
+    end
+  end
+
+  describe "initialize with :headers option" do
+    it "should send headers" do
+      user_agent_in_req_header = nil
+      server_start( '/' => Proc.new {|req, res|
+        user_agent_in_req_header = req["user-agent"]
+        res.status = "200"
+      } ) do
+        HttpspecSimple::Request.new('http://localhost:10080/', :headers => {"user-agent" => "my-agent"})
+      end
+      user_agent_in_req_header.should == "my-agent"
+    end
   end
 end
