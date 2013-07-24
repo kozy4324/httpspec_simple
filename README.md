@@ -12,12 +12,28 @@ base_url 'http://kozy4324.github.io'
 describe request('/') do
   it { should be_http_ok }
   it { should respond_within(2).seconds }
+  it { should retrieve_body_including '<title>L4L</title>' }
 end
 
 describe request('/blog/archives/') do
   it { should be_http_ok }
   it { should respond_within(2).seconds }
+  it { should retrieve_body_including '<title>Blog Archive - L4L</title>' }
 end
+```
+
+```
+$ rspec -f d
+
+http://kozy4324.github.io/
+  should be http ok
+  should respond within 2 seconds (got 0.122 seconds)
+  should retrieve body including "<title>L4L</title>"
+
+http://kozy4324.github.io/blog/archives/
+  should be http ok
+  should respond within 2 seconds (got 0.111 seconds)
+  should retrieve body including "<title>Blog Archive - L4L</title>"
 ```
 
 ## Custom matchers
