@@ -15,7 +15,7 @@ module HttpspecSimple
 
   RSpec::Matchers.define :respond_within do |expected|
     match do |actual|
-      actual.response_time < expected
+      (@response_time = actual.response_time) < expected
     end
 
     failure_message_for_should do |actual|
@@ -27,7 +27,7 @@ module HttpspecSimple
     end
 
     define_method :description do
-      "respond within #{expected} seconds"
+      "respond within #{expected} seconds (got %.3f seconds)" % @response_time
     end
   end
 
