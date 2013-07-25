@@ -65,6 +65,7 @@ option key | type    | description
 :retry     | Integer | when the response code is {40x,50x} or the timeout occurs, retry request the specific times, default value is 0
 :timeout   | Integer | set to Net::HTTP's open_timeout and read_timeout
 :headers   | Hash    | set to the request header
+:basic_auth| Array   | basic auth user and password(ex. `['user', 'passwd']`)
 
 ### base_url(prepend_string)
 
@@ -79,6 +80,7 @@ HttpspecSimple::Request.configure {|config|
   config.retry = 3
   config.timeout = 15
   config.headers = {"user-agent" => "my-agent"}
+  config.basic_auth = ['user', 'passwd']
 }
 ```
 
