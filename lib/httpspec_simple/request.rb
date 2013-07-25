@@ -20,6 +20,9 @@ module HttpspecSimple
             if (headers = opt[:headers] || Request.configuration.headers)
               headers.each {|k, v| req[k] = v }
             end
+            if (basic_auth = opt[:basic_auth] || Request.configuration.basic_auth)
+              req.basic_auth *basic_auth if Array === basic_auth
+            end
             res = http.request(req)
             raise RequestError.new if res.kind_of?(Net::HTTPClientError) or res.kind_of?(Net::HTTPServerError)
           rescue open_timeout_error, read_timeout_error, RequestError
@@ -53,9 +56,10 @@ module HttpspecSimple
         configuration.timeout = config.timeout
         configuration.retry = config.retry
         configuration.headers = config.headers
+        configuration.basic_auth = config.basic_auth
       end
 
-      CONFIG_CLASS = Struct.new(:timeout, :retry, :headers)
+      CONFIG_CLASS = Struct.new(:timeout, :retry, :headers, :basic_auth)
 
       def configuration
         @config ||= reset_configuration
