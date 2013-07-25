@@ -68,4 +68,28 @@ module HttpspecSimple
   end
 
   class RequestError < StandardError; end
+
+  class RequestContainer
+    def self.subclass(url, opt = {})
+      sub = Class.new(self) do
+        def to_s; self.class.to_s; end
+        def response_time; self.class.response_time; end
+        def status; self.class.status; end
+        def body; self.class.body; end
+      end
+      class << sub
+        def url=(_url); @url = _url; end
+        def opt=(_opt); @opt = _opt; end
+        def request; @request ||= Request.new(@url, @opt); end
+        def to_s; request.to_s; end
+        def response_time; request.response_time; end
+        def status; request.status; end
+        def body; request.body; end
+      end
+      sub.url = url
+      sub.opt = opt
+      sub.status if opt[:immediately]
+      sub
+    end
+  end
 end
