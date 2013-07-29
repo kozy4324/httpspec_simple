@@ -16,7 +16,7 @@ module HttpspecSimple
           open_timeout_error = if Net.const_defined?(:OpenTimeout) then Net::OpenTimeout else Timeout::Error end
           read_timeout_error = if Net.const_defined?(:ReadTimeout) then Net::ReadTimeout else Timeout::Error end
           begin
-            req = Net::HTTP::Get.new(@url.path)
+            req = Net::HTTP::Get.new(@url.request_uri)
             if (headers = opt[:headers] || Request.configuration.headers)
               headers.each {|k, v| req[k] = v }
             end

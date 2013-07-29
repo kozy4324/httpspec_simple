@@ -121,4 +121,14 @@ describe HttpspecSimple::Request do
       user_agent_in_req_header.should == "my-agent"
     end
   end
+
+  it "should send get parameters" do
+    query = nil
+    server_start( '/' => Proc.new {|req, res|
+      query = req.query
+    } ) do
+      HttpspecSimple::Request.new('http://localhost:10080/?a=b')
+    end
+    query.should == {"a" => "b"}
+  end
 end
