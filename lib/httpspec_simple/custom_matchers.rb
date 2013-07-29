@@ -13,6 +13,20 @@ module HttpspecSimple
     end
   end
 
+  RSpec::Matchers.define :be_http_redirect do
+    match do |actual|
+      actual.status == '301' || actual.status == '302'
+    end
+
+    failure_message_for_should do |actual|
+      "expected: 301 or 302\n     got: #{actual.status}"
+    end
+
+    failure_message_for_should_not do |actual|
+      "#{actual.to_s} would not be http redirect"
+    end
+  end
+
   RSpec::Matchers.define :respond_within do |expected|
     match do |actual|
       (@response_time = actual.response_time) < expected

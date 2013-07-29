@@ -11,6 +11,29 @@ describe 'custom matchers' do
     end
   end
 
+  describe '#be_http_redirect' do
+    it "should check status code 301" do
+      _, response = server_start('/' => Proc.new {|req, res|
+        res.status = '301'
+      }) do
+        response = request('/', :immediately => true)
+      end
+      expect {
+        response.should be_http_redirect
+      }.not_to raise_error
+    end
+    it "should check status code 302" do
+      _, response = server_start('/' => Proc.new {|req, res|
+        res.status = '302'
+      }) do
+        response = request('/', :immediately => true)
+      end
+      expect {
+        response.should be_http_redirect
+      }.not_to raise_error
+    end
+  end
+
   describe '#respond_within(num).seconds' do
     it "should check response time" do
       requests, response = server_start('/' => Proc.new {|req, res| sleep 2 }) do
