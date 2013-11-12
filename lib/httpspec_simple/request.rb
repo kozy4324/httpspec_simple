@@ -17,9 +17,7 @@ module HttpspecSimple
           read_timeout_error = if Net.const_defined?(:ReadTimeout) then Net::ReadTimeout else Timeout::Error end
           begin
             req = Net::HTTP::Get.new(@url.request_uri)
-            if (headers = opt[:headers] || Request.configuration.headers)
-              headers.each {|k, v| req[k] = v }
-            end
+            {}.merge( Request.configuration.headers || {} ).merge( opt[:headers] || {} ).each {|k, v| req[k] = v }
             if (basic_auth = opt[:basic_auth] || Request.configuration.basic_auth)
               req.basic_auth *basic_auth if Array === basic_auth
             end

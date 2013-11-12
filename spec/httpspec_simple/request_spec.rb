@@ -122,6 +122,27 @@ describe HttpspecSimple::Request do
     end
   end
 
+  describe "configure beaders both global configuration and initializer option" do
+    before(:each) { HttpspecSimple::Request.reset_configuration }
+    after(:each)  { HttpspecSimple::Request.reset_configuration }
+    it "should send headers all" do
+      user_agent_in_req_header = nil
+      x_custom_in_req_header = nil
+      server_start( '/' => Proc.new {|req, res|
+        user_agent_in_req_header = req["user-agent"]
+        x_custom_in_req_header = req["x-custom"]
+        res.status = "200"
+      } ) do
+        HttpspecSimple::Request.configure do |config|
+          config.headers = {"user-agent" => "my-agent"}
+        end
+        HttpspecSimple::Request.new('http://localhost:10080/', :headers => {"x-custom" => "custom-header"})
+      end
+      user_agent_in_req_header.should == "my-agent"
+      x_custom_in_req_header.should == "custom-header"
+    end
+  end
+
   it "should send get parameters" do
     query = nil
     server_start( '/' => Proc.new {|req, res|
