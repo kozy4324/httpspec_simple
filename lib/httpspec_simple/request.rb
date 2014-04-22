@@ -3,7 +3,7 @@ require 'uri'
 
 module HttpspecSimple
   class Request
-    attr_reader :response_time, :status, :body
+    attr_reader :response_time, :status, :body, :headers
 
     def initialize(url, opt = {})
       @url = URI.parse(url)
@@ -30,6 +30,7 @@ module HttpspecSimple
         end
       end
       @status = res ? res.code : 'timeout'
+      @headers = res ? res.to_hash : {}
       unless res.nil?
         @body = res.body
         charset = (res['content-type'] || '').split(';').select{|i| i.start_with?('charset=')}.map{|i| i.sub('charset=', '')}[0]
@@ -78,6 +79,7 @@ module HttpspecSimple
         def response_time; self.class.response_time; end
         def status; self.class.status; end
         def body; self.class.body; end
+        def headers; self.class.headers; end
       end
       class << sub
         def url=(_url); @url = _url; end
@@ -87,6 +89,7 @@ module HttpspecSimple
         def response_time; request.response_time; end
         def status; request.status; end
         def body; request.body; end
+        def headers; request.headers; end
       end
       sub.url = url
       sub.opt = opt

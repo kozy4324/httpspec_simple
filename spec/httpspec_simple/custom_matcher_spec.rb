@@ -34,6 +34,31 @@ describe 'custom matchers' do
     end
   end
 
+  describe '#be_http_redirect_30(1|2)_to' do
+    it "should check status code 301 with Location header" do
+      _, response = server_start('/' => Proc.new {|req, res|
+        res.status = '301'
+        res['Location'] = 'http://example.com/hoge'
+      }) do
+        response = request('/', :immediately => true)
+      end
+      expect {
+        response.should be_http_redirect_301_to 'http://example.com/hoge'
+      }.not_to raise_error
+    end
+    it "should check status code 302 with Location header" do
+      _, response = server_start('/' => Proc.new {|req, res|
+        res.status = '302'
+        res['Location'] = 'http://example.com/foo'
+      }) do
+        response = request('/', :immediately => true)
+      end
+      expect {
+        response.should be_http_redirect_302_to 'http://example.com/foo'
+      }.not_to raise_error
+    end
+  end
+
   describe '#respond_within(num).seconds' do
     it "should check response time" do
       requests, response = server_start('/' => Proc.new {|req, res| sleep 2 }) do

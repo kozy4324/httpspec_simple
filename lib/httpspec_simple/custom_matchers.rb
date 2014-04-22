@@ -27,6 +27,24 @@ module HttpspecSimple
     end
   end
 
+  %w|301 302|.each do |code|
+    RSpec::Matchers.define "be_http_redirect_#{code}_to".to_sym do |expected|
+      match do |actual|
+        location_header = (actual.headers['location'] || []).first
+        actual.status == code && location_header == expected
+      end
+
+      failure_message_for_should do |actual|
+        if actual.status == '301' || actual.status == '302'
+          location_header = (actual.headers['location'] || []).first
+          "expected: #{code}, #{expected}\n     got: #{actual.status}, #{location_header}"
+        else
+          "expected: #{code}, #{expected}\n     got: #{actual.status}"
+        end
+      end
+    end
+  end
+
   RSpec::Matchers.define :respond_within do |expected|
     match do |actual|
       (@response_time = actual.response_time) < expected

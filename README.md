@@ -42,6 +42,18 @@ http://kozy4324.github.io/blog/archives/
 
 Example passes if response is 200 ok
 
+### be_http_redirect
+
+Example passes if response is 301 or 302
+
+### be_http_redirect_301_to(url)
+
+Example passes if response is 301 and `Location` response header has a value which equals expected url
+
+### be_http_redirect_302_to(url)
+
+Example passes if response is 302 and `Location` response header has a value which equals expected url
+
 ### resond_within(n).seconds
 
 Example passes if response time is less than n seconds
