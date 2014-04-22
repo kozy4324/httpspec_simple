@@ -54,6 +54,14 @@ Example passes if response is 301 and `Location` response header has a value whi
 
 Example passes if response is 302 and `Location` response header has a value which equals expected url
 
+### be_not_found
+
+Example passes if response is 404
+
+### be_service_unavailable
+
+Example passes if response is 503
+
 ### resond_within(n).seconds
 
 Example passes if response time is less than n seconds

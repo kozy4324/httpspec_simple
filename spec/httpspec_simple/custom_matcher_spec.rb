@@ -59,6 +59,32 @@ describe 'custom matchers' do
     end
   end
 
+  describe '#be_not_found' do
+    it "should check status code 404" do
+      _, response = server_start('/' => Proc.new {|req, res|
+        res.status = '404'
+      }) do
+        response = request('/', :immediately => true)
+      end
+      expect {
+        response.should be_not_found
+      }.not_to raise_error
+    end
+  end
+
+  describe '#be_service_unavailable' do
+    it "should check status code 503" do
+      _, response = server_start('/' => Proc.new {|req, res|
+        res.status = '503'
+      }) do
+        response = request('/', :immediately => true)
+      end
+      expect {
+        response.should be_service_unavailable
+      }.not_to raise_error
+    end
+  end
+
   describe '#respond_within(num).seconds' do
     it "should check response time" do
       requests, response = server_start('/' => Proc.new {|req, res| sleep 2 }) do

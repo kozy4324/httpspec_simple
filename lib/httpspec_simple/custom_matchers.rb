@@ -1,15 +1,17 @@
 module HttpspecSimple
-  RSpec::Matchers.define :be_http_ok do
-    match do |actual|
-      actual.status == '200'
-    end
+  { '200' => 'be_http_ok', '404' => 'be_not_found', '503' => 'be_service_unavailable' }.each do |code, name|
+    RSpec::Matchers.define name.to_sym do
+      match do |actual|
+        actual.status == code
+      end
 
-    failure_message_for_should do |actual|
-      "expected: 200\n     got: #{actual.status}"
-    end
+      failure_message_for_should do |actual|
+        "expected: #{code}\n     got: #{actual.status}"
+      end
 
-    failure_message_for_should_not do |actual|
-      "#{actual.to_s} would not be http ok"
+      failure_message_for_should_not do |actual|
+        "#{actual.to_s} would not #{name.gsub('_', ' ')}"
+      end
     end
   end
 
